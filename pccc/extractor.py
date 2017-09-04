@@ -1,3 +1,5 @@
+
+
 import pyshark
 import filecap
 import sys, os
@@ -33,14 +35,17 @@ class extractor():
       chng_mode_detect = []
       chng_border = []
 
+      print "pkt_count: ", pkt_count
 
       #classify packets further as req_pkts:command packets res_pkts:reply packets
       try: 
 	for i in range (0,pkt_count):
+#          print "Hello again~~~~~~~~~~~~~~~~~"
 	  if allpkts[i][0] == "0f":		#command packets has 0f in their first field cpf data
 	    allpkts[i].insert(0, i_0f)
 	    req_pkts.append(allpkts[i]) 	#command packets are stored to req_pkts
 	    i_0f += 1
+#	    print i	
 	  elif allpkts[i][0] == "4f": 	#reply packets has 4f in their first field of cpf data
 	    allpkts[i].insert(0, i_4f)
 	    res_pkts.append(allpkts[i])
@@ -60,6 +65,7 @@ class extractor():
 
       for j in range(0,reqpkt_count):
 	if req_pkts[j][5] == "80":
+          print "Mode detect: ", j
 	  chng_mode_detect.append(req_pkts[j][0])
 
       print "Mode Change Detected at these request packets      : ",
@@ -108,3 +114,5 @@ def main():
 	  dial1.extract_from_pcap(capturefile,filepath)
 if __name__ == '__main__': 
     main()   
+
+

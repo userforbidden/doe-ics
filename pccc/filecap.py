@@ -2,16 +2,42 @@ import pyshark
 import sys  
 import os,errno
 
-allpkts = []
+#import time	# HY
 
-def get_enip_packets(pkt): 
+allpkts = []
+frame_cnt = 0
+
+def get_enip_packets(pkt):
+#    print "IN>> get_enip_packets"
     try:
+        global frame_cnt
+#        time.sleep(1)
+#        frame_cnt += 1
+#        print "## ", frame_cnt, " ##"
         enip_lay = pkt.layers
-        cpfdata = enip_lay[3].cpf_data
-        alternatefield = str(cpfdata.alternate_fields)
-        only_data = alternatefield[28:].split(">]")
-        hex_bytes = only_data[0].split(":")
-        allpkts.append(hex_bytes)
+
+#        print "layer 0: ", enip_lay[0]
+#        print "layer 1: ", enip_lay[1]
+#        print "layer 2: ", enip_lay[2]
+#        print "layer 3: ", enip_lay[3]
+#        print "cpf_data: ", enip_lay[3].cpf_data
+#        sys.exit()
+        
+        try:
+            cpfdata = enip_lay[3].cpf_data
+            alternatefield = str(cpfdata.alternate_fields)
+        
+            only_data = alternatefield[28:].split(">]")
+            hex_bytes = only_data[0].split(":")
+            allpkts.append(hex_bytes)
+        except:
+            cipdata = enip_lay[5].cip_data
+            hex_bytes = cipdata.split(":")
+            pcccdata = hex_bytes[7:]            
+#            print "===pcccdata", pcccdata
+            allpkts.append(pcccdata)
+
+#	print "## ", frame_cnt, " ##"
     except AttributeError as e:
         #ignore packets that aren't ENIP
         pass
