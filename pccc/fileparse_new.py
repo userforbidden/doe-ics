@@ -224,10 +224,12 @@ class fileparse():
                     nb = ''.join([buf[x:x + 2][::-1] for x in range(0, len(buf), 2)])
                     hexx = binascii.hexlify(nb)
                     # The Data files start from the 134th Byte
-                    start_bit = int(hexx[2:4], 16)
-                    start_bit = start_bit - 2
+                    #start_bit = int(hexx[2:4], 16)     # wrong
+                    #start_bit = start_bit - 2          # wrong
+                    start_bit = int("68", 16)           # filetype 3 (configuration) always starts at 0x68. and this file looks like the first file
+                    #print "start_bit: ", start_bit
                     self.configSpliter(hexx[(start_bit * 2):])
-                    # print self.all_config
+                    #print self.all_config
                     self.createFileConfig(self.all_config)
                     self.ladderParser(f)
                     self.printReadableRung()
@@ -306,7 +308,6 @@ class fileparse():
         dataconfig_num = 0
         for i in range(0, len(configList)):
             try:
-
                 filetype_num = configList[i][0:2]
                 data_code = self.datafile_config.get(filetype_num.upper(), 'filetype')
                 data_denotion = self.datafile_config.get(filetype_num.upper(), 'denotion')
