@@ -76,7 +76,8 @@ class extractor():
             print chng_border
         # Can't detect mode change -> set the border as the first packet and the last packet
         else:
-            print "Can't find mode change. Set the border as the first and the last packet: ", 
+            print "Fail to find two mode change. Set the border as the first and the last packet: ", 
+            chng_mode_detect = []
             chng_mode_detect.append(0)      
             chng_mode_detect.append(reqpkt_count-1)
             chng_border = filecap.borders(chng_mode_detect, 2)
