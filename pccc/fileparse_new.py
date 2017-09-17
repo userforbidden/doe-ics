@@ -665,16 +665,18 @@ class fileparse():
         except Exception as ex:
             template = "{0}"
             message = template.format(type(ex).__name__, ex.args)
-            print "At getConfigPrintSections:" + message
+            print "At getConfigPrintSections:" + message,
             if message == "NoSectionError":
                 print strn
                 print "Instruction not configured in Configuration File",
             elif message == "NoOptionError":
                 pass
             elif message == "ValueError":
-                instruc = strn[0:(ins_size * 2)].upper()
+                instruc = strn[0:(int(ins_size) * 2)].upper()
                 # instruc = str(ins_inscode)
                 #self.all_instructions.append(instruc)
+                output = str(ins_inscode) + "/" + strn
+                return output
             else:
                 print message
                 pass
