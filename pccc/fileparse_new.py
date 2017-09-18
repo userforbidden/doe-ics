@@ -226,7 +226,7 @@ class fileparse():
                     # The Data files start from the 134th Byte
                     #start_bit = int(hexx[2:4], 16)     # wrong
                     #start_bit = start_bit - 2          # wrong
-                    start_bit = int("68", 16)           # filetype 3 (configuration) always starts at 0x68. and this file looks like the first file
+                    start_bit = int("68", 16)           # filetype 3 (configuration) always starts at 0x68 (When 2 byte of length of file is appended at the first of the file. Actually, origianl file doesn't contain this length field. But Saran make the file include the length value. So, in this case, start offset is 0x68. otherwise, start offset is 0x66). Filetype 3 looks like the first file.
                     #print "start_bit: ", start_bit
                     self.configSpliter(hexx[(start_bit * 2):])
                     #print self.all_config
