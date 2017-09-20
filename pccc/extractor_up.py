@@ -18,8 +18,8 @@ class extractor():
 
             pkt_count = len(allpkts)
             
-            # ip_src (eth_src)  <-----> ip_dst (eth_dst)
-            print "{0} ({1}) <-----> {2} ({3}) ".format(net_addr[2], net_addr[0], net_addr[3], net_addr[1])
+            # ip_dst (eth_dst) <------ ip_src (eth_src)
+            print "{0} ({1}) <------ {2} ({3}) ".format(net_addr[3], net_addr[1], net_addr[2], net_addr[0])
             print "packet count: ", pkt_count
 
             fileTransStart = False
@@ -56,6 +56,14 @@ class extractor():
                                 pass
                         except:
                             print "Other Error: ", sys.exc_info()[0]
+                try:
+                    commFile = outPath + "/upload" + str(comm_num) + "/commInfo"
+                    msg = "{0} ({1}) <------ {2} ({3}) ".format(net_addr[3], net_addr[1], net_addr[2], net_addr[0])
+                    with open(commFile, 'w') as f:
+                        f.write(msg)
+                    f.close()
+                except:
+                    print "Error: ", sys.exc_info()[0]
 
 def main():
     if len(sys.argv) < 2:

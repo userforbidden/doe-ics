@@ -6,7 +6,9 @@ allpkts = []
 net_addr = []
 #frame_cnt = 0
 
-def appendPkt(hex_bytes, eth_src, eth_dst, ip_src, ip_dst):
+PCCC_PORT = 44818
+
+def appendPkt(hex_bytes, eth_src, eth_dst, ip_src, ip_dst, tcp_srcport, tcp_dstport):
     addrTup = (eth_src, eth_dst, ip_src, ip_dst)
     addrTup_reverse = (eth_dst, eth_src, ip_dst, ip_src)
     exist = False
@@ -17,7 +19,10 @@ def appendPkt(hex_bytes, eth_src, eth_dst, ip_src, ip_dst):
             break       
     
     if exist == False:
-        net_addr.append(addrTup)
+        if tcp_srcport == PCCC_PORT:
+            net_addr.append(addrTup)
+        else:
+            net_addr.append(addrTup_reverse)
         allpkts.append([hex_bytes])
 
 def get_enip_packets(pkt):
@@ -34,11 +39,14 @@ def get_enip_packets(pkt):
         ip_src = pkt.layers[1].src
         ip_dst = pkt.layers[1].dst
 
+        tcp_srcport = int(pkt.layers[2].srcport)
+        tcp_dstport = int(pkt.layers[2].dstport)
+
         alternatefield = str(cpfdata.alternate_fields)  # second cpf_data
         only_data = alternatefield[28:].split(">]")
         hex_bytes = only_data[0].split(":")
             
-        appendPkt(hex_bytes, eth_src, eth_dst, ip_src, ip_dst)
+        appendPkt(hex_bytes, eth_src, eth_dst, ip_src, ip_dst, tcp_srcport, tcp_dstport)
     
     except AttributeError as e:     # don't have cpf_data field in pkt.layer[3]
         try:
@@ -50,10 +58,13 @@ def get_enip_packets(pkt):
             ip_src = pkt.layers[1].src
             ip_dst = pkt.layers[1].dst
 
+            tcp_srcport = int(pkt.layers[2].srcport)
+            tcp_dstport = int(pkt.layers[2].dstport)
+
             hex_bytes = cipdata.split(":")
             pcccdata = hex_bytes[7:]
             
-            appendPkt(pcccdata, eth_src, eth_dst, ip_src, ip_dst)
+            appendPkt(pcccdata, eth_src, eth_dst, ip_src, ip_dst, tcp_srcport, tcp_dstport)
         except:
             pass
 
@@ -75,11 +86,11 @@ def try_decode_TCP_retrans(pkt):
         tcp_dstport = int(pkt.layers[2].dstport)
 
         # pccc always use port 44818?
-        if tcp_srcport == 44818 or tcp_dstport == 44818:
+        if tcp_srcport == PCCC_PORT or tcp_dstport == PCCC_PORT:
             # assume AB Micrologix 1400->RSLogix use pccc w/0 cip
             hex_bytes = str(pkt.layers[2].segment_data).split(":")
             pcccdata = hex_bytes[41:]
 
-            appendPkt(pcccdata, eth_src, eth_dst, ip_src, ip_dst)   
+            appendPkt(pcccdata, eth_src, eth_dst, ip_src, ip_dst, tcp_srcport, tcp_dstport)   
     except:
         pass

@@ -765,6 +765,15 @@ def main():
         # filenumber = (str(sys.argv[1])).upper()
         filetype = (str(sys.argv[1])).upper()
         strfile = str(os.path.abspath(sys.argv[2]))
+
+        try:
+            commFile = os.path.dirname(sys.argv[2]) + "/commInfo"
+            with open(commFile, 'r') as f:
+                print f.read()
+        except:
+            pass
+#            print sys.exc_info()[0]
+
         dial = fileparse()
         dial.fileFinder(strfile, filetype)
 
