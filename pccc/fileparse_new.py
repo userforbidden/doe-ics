@@ -306,9 +306,14 @@ class fileparse():
         fileconfig = open(self.saveDir + '/fileconfig.ini', 'w')
         config = ConfigParser.RawConfigParser()
         dataconfig_num = 0
+        datafile_start = False
         for i in range(0, len(configList)):
             try:
                 filetype_num = configList[i][0:2]
+
+                if filetype_num == "82":    # Output file type (file number:0)
+                    datafile_start = True
+    
                 data_code = self.datafile_config.get(filetype_num.upper(), 'filetype')
                 data_denotion = self.datafile_config.get(filetype_num.upper(), 'denotion')
                 # data_filenum = self.datafile_config.get(configList[i][2:4].upper(),'filenum')
@@ -329,22 +334,34 @@ class fileparse():
 
                 self.datafileCount = self.datafileCount + 1
 
-                if self.datafile_config.has_section(filetype_num):
+                #if self.datafile_config.has_section(filetype_num):
                     # print "I'm here"
-                    dataconfig_num = dataconfig_num + 1
+                    #dataconfig_num = dataconfig_num + 1
                     # self.datafileCount = dataconfig_num + 1
                     # print self.datafileCount
+        
+                if datafile_start == True:
+                    dataconfig_num = dataconfig_num + 1        
+            
             except Exception as ex:
                 template = "{0}"
                 message = template.format(type(ex).__name__, ex.args)
+
+                if datafile_start == True:
+                    dataconfig_num = dataconfig_num + 1        
+
                 if message == "NoSectionError":
-                    pass  # print "Data File is not configured in Configuration File"
+                    #print i, configList[i][0:20]
+                    #print "Data File is not configured in Configuration File"
+                    pass  
                 else:
                     print message
                     pass
+            
+
         config.write(fileconfig)
         fileconfig.close()
-
+        
     # print "configfile created at " + self.saveDir+'/fileconfig.ini'
 
     def configSpliter(self, strn):
@@ -613,7 +630,11 @@ class fileparse():
                 ins_file_number = file_Settings.get(ins_address, 'dataconfignum')
                 ins_wordaddress = file_Settings.getint(ins_address, 'wordaddress')
 
-                timedatafilename = self.saveDir + "/file:" + str(ins_file_number).zfill(2) + "-Type:" + ins_filetype_num
+#                timedatafilename = self.saveDir + "/file:" + str(ins_file_number).zfill(2) + "-Type:" + ins_filetype_num    
+                timedatafilename = self.saveDir + "/file:" + str(hex(int(ins_file_number))).split("x")[1].zfill(2) + "-Type:" + ins_filetype_num    
+#                print "Here:", str(hex(int(ins_file_number))).split("x")[1].zfill(2)
+
+
                 with open(timedatafilename, 'rb') as tf:
                     timbuf = tf.read()
                     ntb = ''.join([timbuf[x:x + 2][::-1] for x in range(0, len(timbuf), 2)])
@@ -621,17 +642,24 @@ class fileparse():
                     indi_t = filecap.borders(thexx, 12)
                     # print indi_t[bit_address]
 
+                    #print "indi_t:", indi_t
+
                     if ins_inscode == 'RES':
                         output = str(ins_inscode) + "/[" + str(ins_denotion) + str(ins_file_number) + ":" + str(
                             bit_address) + "]"
                     elif ins_denotion == 'T':
+                        #print "bit_address:", bit_address
+                        #print "aaaaaaaaaaaaaaaa"
                         output = str(ins_inscode) + "/[" + str(ins_denotion) + str(ins_file_number) + ":" + str(
                             bit_address) + "/" + str(ins_timebase) + "/" + str(
                             int(indi_t[bit_address][5:8], 16)) + "/" + str(int(indi_t[bit_address][10:12], 16)) + "]"
+
+                        #print "OUTPUT:", output
                     else:
                         output = str(ins_inscode) + "/[" + str(ins_denotion) + str(ins_file_number) + ":" + str(
                             bit_address) + "/" + str(int(indi_t[bit_address][5:8], 16)) + "/" + str(
                             int(indi_t[bit_address][10:12], 16)) + "]"
+
 
             elif ins_instype == 'compare1':
                 first_address = str(strn[(ins_1var_start * 2):(ins_1var_end * 2)]).upper()
@@ -678,7 +706,7 @@ class fileparse():
                 output = str(ins_inscode) + "/" + strn
                 return output
             else:
-                print message
+                print message, sys.exc_info()[0]
                 pass
 
     def getAddressOfDatafileinIns(self, ins_address, bitaddress, bitflag):
