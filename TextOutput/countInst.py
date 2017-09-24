@@ -19,7 +19,7 @@ class Inst:
         self.TON=(6, "TON")
         self.TOF=(7, "TOF")
         self.RTO=(8, "RTO")
-        self.CTU=(9, "CTO")
+        self.CTU=(9, "CTU")
         self.CTD=(10, "CTD")
         self.RES=(11, "RES")
         self.JSR=(12, "JSR")
