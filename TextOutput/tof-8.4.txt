@@ -1,0 +1,6 @@
+at branchedInstructionSplitter
+02d0000c
+Branched Instruction not configured in Configuration File Rung-0: --> (XIO/[I1:0/10])
+Rung-1: ( ( TON/[T4:0/0.01/500/0]) OR (XIO/[T4:0/DN] AND OTE/[B3:0/13]) OR ( XIC/[I1:0/10]) OR ( XIC/[B3:0/13]) ) --> (OTE/[B3:0/14])
+Rung-2: (XIC/[I1:0/10]) --> (OTE/[B3:0/15])
+Rung-3: END

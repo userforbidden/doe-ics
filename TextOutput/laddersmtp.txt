@@ -1,0 +1,13 @@
+Rung-0: (XIC/I1:0/0) OR  (XIO/T4:2/DN) --> (TON/T4:0/1.0/3/0)
+Rung-1: (XIC/T4:0/TT) --> (OTE/B3:0/3)
+Rung-2: (XIC/B3:0/0) --> (OTE/O0:0/3)
+Rung-3: (XIC/T4:0/DN) --> (TON/T4:1/1.0/5/0)
+Rung-4: (XIC/T4:1/TT) --> (OTE/B3:0/1)
+Rung-5: (XIC/B3:0/3) --> (OTE/O0:0/1)
+Rung-6: (XIC/T4:1/DN) --> (TON/T4:2/1.0/2/0)
+Rung-7: (XIC/T4:2/TT) --> (OTE/B3:0/2)
+Rung-8: (XIC/B3:0/1) --> (OTE/O0:0/2)
+Rung-9: (XIO/I1:0/0) OR  (XIO/T4:3/DN) --> (TON/T4:3/1.0/1/0)
+Rung-10: ( (XIC/O0:0/0 OR XIO/T4:3/DN) AND (XIC/T4:3/DN OR XIO/O0:0/0) ) --> (OTE/B3:0/0)
+Rung-11: (XIC/B3:0/2) OR  (XIO/I1:0/0) --> (OTE/O0:0/0)
+Rung-12: END

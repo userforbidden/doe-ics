@@ -1,0 +1,4 @@
+Rung-0:  ( ( XIC/[T4:1/EN] ) OR ( XIC/[I1:0/4] ) ) AND XIO/[T4:2/TT] AND XIC/[I1:0/0] AND XIC/[B3:0/5] AND XIC/[B3:9/3] AND XIC/[B3:0/10] --> TON/[T4:1/1.0/10/0] 
+Rung-1:  ( ( XIC/[T4:2/TT] ) OR ( XIC/[T4:1/DN] AND XIO/[I1:0/4] ) ) --> TON/[T4:2/1.0/10/0] 
+Rung-2:  XIC/[T4:1/EN] AND XIO/[T4:2/TT] --> OTE/[O0:0/1] 
+Rung-3:  END 
