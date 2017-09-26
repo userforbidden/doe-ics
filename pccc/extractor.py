@@ -22,8 +22,8 @@ class extractor():
         cap = pyshark.FileCapture(capturefile)
         cap.apply_on_packets(filecap.get_enip_packets, timeout=100)
 
-        # incremental variables
-        i_0f = i_4f = i_06 = i_46 = i_other = 0
+        # incremental variables     
+        i_0f = i_4f = i_06 = i_46 = i_other = 0  
 
         # declare variables
         pkt_count = len(filecap.allpkts)

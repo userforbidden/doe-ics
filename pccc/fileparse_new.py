@@ -12,7 +12,6 @@ import binascii
 import ConfigParser
 import types
 from sys import stdout
-from ladderDrawer import ladderDrawer
 
 import math
 #import time
@@ -234,7 +233,6 @@ class fileparse():
                     self.ladderParser(f)
                     self.printReadableRung()
 
-                    # ld = ladderDrawer()
                     # saveDir1 = str(self.saveDir) + '/ImageResults/'#+str(self.fileNameDir[5])+'/'
                     ##print saveDir1
                     # ld.setSaveDir(saveDir1)
