@@ -1,2 +1,0 @@
-Rung-0: (XIC/[I1:0/0]) AND  (XIC/[I1:0/1]) --> (OTE/[O0:0/0])
-Rung-1: END

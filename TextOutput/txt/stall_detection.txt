@@ -1,8 +1,0 @@
-Rung-0: (XIC/[I1:0/1]) AND  (ONS/[B3:0/5]) --> (OTE/[B3:0/3])
-Rung-1: (XIC/[I1:0/2]) AND  (XIO/[B3:0/3]) --> (TON/[T4:4/0.01/600/0])
-Rung-2: (XIO/[T4:4/DN]) AND  ( ( XIC/[B3:0/15]) OR ( XIC/[I1:0/0]) ) --> (OTE/[B3:0/15])
-Rung-3: (XIC/[I1:0/2]) AND  (XIC/[I1:0/1]) --> (TON/[T4:9/1.0/3/0])
-Rung-4: (XIC/[I1:0/2]) AND  (XIO/[I1:0/1]) --> (TON/[T4:10/1.0/8/0])
-Rung-5: ( ( XIC/[T4:9/DN]) OR ( XIC/[T4:10/DN]) ) --> (OTE/[B3:0/7])
-Rung-6: (XIO/[T4:9/DN]) AND  (XIO/[T4:10/DN]) AND  ( ( XIC/[B3:0/15]) OR ( XIC/[I1:0/0]) ) --> (OTE/[B3:0/15])
-Rung-7: END

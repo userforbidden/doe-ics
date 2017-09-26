@@ -1,5 +1,0 @@
-Rung-0:  ( ( XIC/[I1:0/11] AND ( ( XIC/[B3:6/1] ) OR ( XIC/[B3:4/3] ) ) ) OR ( XIO/[B3:0/8] ) ) --> OTE/[B3:6/1] 
-Rung-1:  ( ( XIC/[I1:0/11] ) OR ( XIO/[B3:0/8] ) ) --> TOF/[T4:14/1.0/5/0] 
-Rung-2:  XIC/[T4:14/DN] AND ( ( XIC/[B3:6/1] ) OR ( XIC/[B3:4/3] ) ) --> OTE/[B3:6/1] 
-Rung-3:  ( ( XIC/[I1:0/3] ) OR ( XIO/[B3:0/8] ) ) --> OTE/[B3:8/6] 
-Rung-4:  END 

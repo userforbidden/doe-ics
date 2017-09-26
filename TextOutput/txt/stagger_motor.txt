@@ -1,4 +1,0 @@
-Rung-0: (XIO/[T4:0/DN]) --> (TON/[T4:0/0.01/1404/0])
-Rung-1: ( (XIC/[B3:0/6] AND XIC/[B3:0/2]) OR (XIC/[B3:0/5] AND XIC/[B3:0/3]) ) AND ( ( XIC/[O0:0/4]) OR ( LIM/1/[T4:0/TT]/150) ) --> (OTE/[O0:0/4])
-Rung-2: ( (XIC/[B3:0/9] AND XIC/[B3:0/2]) OR (XIC/[B3:0/10] AND XIC/[B3:0/3]) ) AND ( ( XIC/[O0:0/5]) OR ( LIM/650/[T4:0/TT]/800) ) --> (OTE/[O0:0/5])
-Rung-3: END

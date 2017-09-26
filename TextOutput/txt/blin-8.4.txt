@@ -1,3 +1,0 @@
-Rung-0: (XIO/[T4:0/DN]) --> (TON/[T4:0/1.0/10/0])
-Rung-1: ( (XIC/[T4:0/DN] AND XIO/[O0:0/0]) OR (XIC/[O0:0/0] AND XIO/[T4:0/DN]) ) --> (OTE/[O0:0/0])
-Rung-2: END
