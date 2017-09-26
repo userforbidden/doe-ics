@@ -134,9 +134,10 @@ def main():
                 print(value[1]+",", end='')
     print("")
 
-    for filename in os.listdir(os.getcwd()):
+    for filename in os.listdir(os.getcwd() + "/txt/"):
         if filename.split(".")[-1] == "txt":
-            z = open(filename, 'r+')
+            filepath = os.getcwd() + "/txt/" + filename
+            z = open(filepath, 'r+')
             linelist = []
             for word in z.readlines():  # listing the lines of text file
                 line = [x.strip() for x in word.split(" ") if x != '']

@@ -1,0 +1,3 @@
+Usage python fileparse.py filetype filepath 
+ FileType can be 00 to 254
+ Storage path is where the PLC file dumps are stored
