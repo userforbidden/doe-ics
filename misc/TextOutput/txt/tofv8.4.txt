@@ -1,0 +1,5 @@
+Rung-0: (XIC/[I1:0/0]) --> (OTE/[O0:0/1])
+Rung-1: (XIC/[I1:0/1]) --> (OTE/[O0:0/2])
+Rung-2: (XIC/[I1:0/2]) --> (OTE/[O0:0/0])
+Rung-3: (XIO/[I1:0/3]) --> (OTE/[O0:0/3])
+Rung-4: END
