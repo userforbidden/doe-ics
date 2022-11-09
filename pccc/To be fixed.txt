@@ -1,0 +1,3 @@
+* file parser *
+- add inst. to configure (epson modbus case)
+- calculate bit address (oven oiler case)

